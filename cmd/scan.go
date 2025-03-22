@@ -1,1 +1,52 @@
 package cmd
+
+import (
+	"fmt"
+	"log"
+
+	"git-secrets-scanner/internal/git"
+	"git-secrets-scanner/internal/scanner"
+
+	"github.com/spf13/cobra"
+)
+
+// scanCmd represents the scan command
+var scanCmd = &cobra.Command{
+	Use:   "scan",
+	Short: "Scans staged Git files for secrets",
+	Long: `This command scans the currently staged files in a Git repository
+to detect secrets such as API keys, passwords, and tokens before they are committed.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		// Get staged files
+		stagedFiles, err := git.GetStagedFiles()
+		if err != nil {
+			log.Fatalf("Error getting staged files: %v", err)
+		}
+
+		if len(stagedFiles) == 0 {
+			fmt.Println("No staged files found.")
+			return
+		}
+
+		fmt.Println("Scanning staged files for secrets...")
+
+		// Scan each file for secrets
+		for _, file := range stagedFiles {
+			fmt.Printf("Scanning: %s\n", file)
+			foundSecrets := scanner.ScanFile(file)
+
+			if len(foundSecrets) > 0 {
+				fmt.Printf("Potential secrets found in %s:\n", file)
+				for _, secret := range foundSecrets {
+					fmt.Println("  -", secret)
+				}
+			} else {
+				fmt.Println("No secrets detected in", file)
+			}
+		}
+	},
+}
+
+func init() {
+	rootCmd.AddCommand(scanCmd)
+}
