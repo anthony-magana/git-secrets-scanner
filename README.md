@@ -56,6 +56,11 @@ chmod +x .git/hooks/pre-commit
 ```
 Now, any attempt to commit a file containing secrets will be blocked.
 
+### Uninstalling the **pre-commit hook**:
+```sh
+git-secrets-scanner uninstall-hook
+```
+
 ## ⚙️ Custom Configuration
 You can customize regex patterns by modifying **config.yaml**:
 
