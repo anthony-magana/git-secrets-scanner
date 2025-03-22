@@ -2,22 +2,23 @@ package scanner
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"regexp"
+
+	"git-secrets-scanner/internal/config"
 )
 
-// List of regex patterns for secrets
-var patterns = []string{
-	`AKIA[0-9A-Z]{16}`, // AWS Access Key
-	`xox[baprs]-[0-9]{12}-[0-9]{12}-[0-9A-Za-z]{24}`,                  // Slack Token
-	`(?i)api[-_]?key['"]?\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,50})['"]?`, // Generic API Key
-	`(?i)password\s*=\s*['"]\w+`,                                      // Generic passwords
-	`-----BEGIN RSA PRIVATE KEY-----`,                                 // RSA Private keys
-}
-
-// ScanFile scans a given file for secrets
+// ScanFile scans a given file for secrets using regex patterns from config.yaml
 func ScanFile(filePath string) []string {
 	var foundSecrets []string
+
+	// Load regex patterns from config.yaml (fallback to defaults)
+	cfg, err := config.LoadConfig("config.yaml")
+	if err != nil {
+		fmt.Println("⚠️ Warning: Using default regex patterns (config.yaml not found or invalid)")
+		cfg = config.DefaultConfig()
+	}
 
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -29,7 +30,7 @@ func ScanFile(filePath string) []string {
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		for _, pattern := range patterns {
+		for _, pattern := range cfg.Patterns {
 			re := regexp.MustCompile(pattern)
 			if re.MatchString(line) {
 				foundSecrets = append(foundSecrets, line)
