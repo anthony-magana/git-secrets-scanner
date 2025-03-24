@@ -62,22 +62,31 @@ git-secrets-scanner uninstall-hook
 ```
 
 ## ⚙️ Custom Configuration
-You can customize regex patterns by modifying **config.yaml**:
+By default, **Git Secrets Scanner** loads patterns and entropy settings from ``config.yaml``.
+You can specify a custom configuration file using the ``--config`` flag.
 
+### Usage
+```sh
+git-secrets-scanner scan --config custom-config.yaml
+```
+
+### Example ``custom-config.yaml``
 ```yaml
 patterns:
-  - "AKIA[0-9A-Z]{16}"  # AWS Access Key
-  - "xox[baprs]-[0-9]{12}-[0-9]{12}-[0-9A-Za-z]{24}"  # Slack Token
+  - "sk_live_[0-9a-zA-Z]{24}"  # Stripe Live API Key
+  - "ghp_[0-9a-zA-Z]{36}"  # GitHub Personal Access Token
+entropy_threshold: 4.0  # Lower threshold for stricter entropy detection
 ```
 
 ## 📖 Example Output
 
 ```
-$ git-secrets-scanner scan
+$ git-secrets-scanner scan --config custom-config.yaml
 Scanning staged files for secrets...
-Scanning: config.json
-Potential secrets found in config.json:
-  - "AWS_SECRET_KEY": "AKIAEXAMPLE1234567890"
+Scanning: credentials.json
+Potential secrets found in credentials.json:
+  - [Regex] "sk_live_abc123xyz789..."
+  - [Entropy] hjK8@#Dfh99s2!
 
 Commit blocked! Remove sensitive data before committing.
 ```
