@@ -3,12 +3,16 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"path/filepath"
+	"strings"
 
 	"git-secrets-scanner/internal/git"
 	"git-secrets-scanner/internal/scanner"
 
 	"github.com/spf13/cobra"
 )
+
+var excludePatterns []string
 
 // scanCmd represents the scan command
 var scanCmd = &cobra.Command{
@@ -32,6 +36,11 @@ to detect secrets such as API keys, passwords, and tokens before they are commit
 
 		// Scan each file for secrets
 		for _, file := range stagedFiles {
+			if isExcluded(file) {
+				fmt.Printf("Skipping excluded file: %s\n", file)
+				continue
+			}
+
 			fmt.Printf("Scanning: %s\n", file)
 			foundSecrets := scanner.ScanFile(file)
 
@@ -49,4 +58,16 @@ to detect secrets such as API keys, passwords, and tokens before they are commit
 
 func init() {
 	rootCmd.AddCommand(scanCmd)
+	scanCmd.Flags().StringSliceVarP(&excludePatterns, "exclude", "e", []string{}, "Files or patterns to exclude (e.g., config.json, *.log)")
+}
+
+// isExcluded checks if a file matches any exclusion pattern
+func isExcluded(filePath string) bool {
+	for _, pattern := range excludePatterns {
+		matched, _ := filepath.Match(pattern, filepath.Base(filePath))
+		if matched || strings.HasSuffix(filePath, pattern) {
+			return true
+		}
+	}
+	return false
 }
