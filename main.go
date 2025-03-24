@@ -1,7 +1,7 @@
 package main
 
 import (
-	"git-secrets-scanner/cmd"
+	"github.com/anthony-magana/git-secrets-scanner/cmd"
 )
 
 func main() {

@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"git-secrets-scanner/internal/config"
-	"git-secrets-scanner/internal/git"
-	"git-secrets-scanner/internal/scanner"
+	"github.com/anthony-magana/git-secrets-scanner/internal/config"
+	"github.com/anthony-magana/git-secrets-scanner/internal/git"
+	"github.com/anthony-magana/git-secrets-scanner/internal/scanner"
 
 	"github.com/spf13/cobra"
 )

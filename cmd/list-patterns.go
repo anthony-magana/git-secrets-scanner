@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"git-secrets-scanner/internal/config"
+	"github.com/anthony-magana/git-secrets-scanner/internal/config"
 
 	"github.com/spf13/cobra"
 )
