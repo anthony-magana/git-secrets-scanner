@@ -22,8 +22,7 @@ func calculateEntropy(s string) float64 {
 	return entropy
 }
 
-// isHighEntropy checks if a string has high entropy (likely a secret)
-func isHighEntropy(s string) bool {
-	threshold := 4.5 // Adjust threshold as needed (higher = stricter)
+// isHighEntropy checks if a string exceeds the entropy threshold (likely a secret)
+func isHighEntropy(s string, threshold float64) bool {
 	return len(s) > 10 && calculateEntropy(s) > threshold
 }

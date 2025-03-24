@@ -42,7 +42,7 @@ func ScanFile(filePath string) []string {
 
 		// Entropy-based scanning
 		for _, word := range splitWords(line) {
-			if isHighEntropy(word) {
+			if isHighEntropy(word, cfg.EntropyThreshold) {
 				foundSecrets = append(foundSecrets, "[Entropy] "+word)
 			}
 		}

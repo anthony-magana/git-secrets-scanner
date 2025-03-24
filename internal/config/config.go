@@ -9,7 +9,8 @@ import (
 
 // Config structure for regex patterns
 type Config struct {
-	Patterns []string `yaml:"patterns"`
+	Patterns         []string `yaml:"patterns"`
+	EntropyThreshold float64  `yaml:"entropy_threshold"`
 }
 
 // LoadConfig reads the config.yaml file
@@ -29,6 +30,11 @@ func LoadConfig(configPath string) (Config, error) {
 		return cfg, fmt.Errorf("failed to parse config file: %v", err)
 	}
 
+	// Ensure entropy threshold has a valid value
+	if cfg.EntropyThreshold == 0 {
+		cfg.EntropyThreshold = 4.5 // Default value
+	}
+
 	return cfg, nil
 }
 
@@ -40,5 +46,6 @@ func DefaultConfig() Config {
 			"xox[baprs]-[0-9]{12}-[0-9]{12}-[0-9A-Za-z]{24}",                        // Slack Token
 			"(?i)api[-_]?key['\"]?\\s*[:=]\\s*['\"]?([A-Za-z0-9_\\-]{20,50})['\"]?", // Generic API Key
 		},
+		EntropyThreshold: 4.5,
 	}
 }
