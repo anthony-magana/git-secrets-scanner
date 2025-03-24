@@ -180,6 +180,32 @@ Flags:
 Use "git-secrets-scanner [command] --help" for more details about a command.
 ```
 
+## 🛠 Running Git Secrets Scanner in CI/CD
+Git Secrets Scanner can be integrated into GitHub Actions to prevent accidental secret leaks.
+
+### GitHub Actions Integration
+Add the following workflow file:\
+&nbsp;``.github/workflows/secrets-scan.yml``
+
+```yaml
+name: Git Secrets Scan
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v4
+        with:
+          go-version: 1.20
+      - run: go build -o git-secrets-scanner
+      - run: git-secrets-scanner scan --verbose --config config.yaml
+```
+
 ## 🤝 Contributing
 Contributions are welcome! Feel free to submit a pull request or open an issue.
 
