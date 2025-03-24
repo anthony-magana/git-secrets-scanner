@@ -188,5 +188,5 @@ This project is licensed under the MIT License.
 
 ## 👨‍💻 Author
 Developed by Anthony Magana
-GitHub: anthony-magana
+GitHub: [anthony-magana](https://github.com/anthony-magana)
 
