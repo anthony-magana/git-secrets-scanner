@@ -125,6 +125,26 @@ Scanning: app.js
 No secrets detected in app.js
 ```
 
+## 📜 Listing Active Patterns
+To see which regex patterns are being used for secret detection, run:
+
+```sh
+git-secrets-scanner list-patterns
+```
+
+To load patterns from a custom config file:
+```sh
+git-secrets-scanner list-patterns --config custom-config.yaml
+```
+
+### Example Output
+```
+🔍 Active Regex Patterns:
+  - AKIA[0-9A-Z]{16}
+  - xox[baprs]-[0-9]{12}-[0-9]{12}-[0-9A-Za-z]{24}
+  - (?i)api[-_]?key['\"]?\s*[:=]\s*['\"]?([A-Za-z0-9_\-]{20,50})['\"]?
+```
+
 ## 📖 Getting Help
 You can view all available commands and options by using the --help flag:
 
