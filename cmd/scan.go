@@ -13,8 +13,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var excludePatterns []string
-var configPath string
+var (
+	excludePatterns []string
+	configPath      string
+	verbose         bool
+)
 
 // scanCmd represents the scan command
 var scanCmd = &cobra.Command{
@@ -46,20 +49,24 @@ to detect secrets such as API keys, passwords, and tokens before they are commit
 		// Scan each file
 		for _, file := range stagedFiles {
 			if isExcluded(file) {
-				fmt.Printf("Skipping excluded file: %s\n", file)
+				if verbose {
+					fmt.Printf("ℹ️ Skipping excluded file: %s\n", file)
+				}
 				continue
 			}
 
-			fmt.Printf("Scanning: %s\n", file)
+			fmt.Printf("🔍 Scanning: %s\n", file)
 			foundSecrets := scanner.ScanFileWithEntropy(file, cfg.EntropyThreshold, cfg.Patterns)
 
 			if len(foundSecrets) > 0 {
-				fmt.Printf("Potential secrets found in %s:\n", file)
+				fmt.Printf("❌ Potential secrets found in %s:\n", file)
 				for _, secret := range foundSecrets {
 					fmt.Println("  -", secret)
 				}
 			} else {
-				fmt.Println("No secrets detected in", file)
+				if verbose {
+					fmt.Println("✅ No secrets detected in", file)
+				}
 			}
 		}
 	},
@@ -69,6 +76,7 @@ func init() {
 	rootCmd.AddCommand(scanCmd)
 	scanCmd.Flags().StringSliceVarP(&excludePatterns, "exclude", "e", []string{}, "Files or patterns to exclude (e.g., config.json, *.log)")
 	scanCmd.Flags().StringVarP(&configPath, "config", "c", "config.yaml", "Path to custom config file")
+	scanCmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose output")
 }
 
 // isExcluded checks if a file matches any exclusion pattern
