@@ -125,6 +125,41 @@ Scanning: app.js
 No secrets detected in app.js
 ```
 
+## 📖 Getting Help
+You can view all available commands and options by using the --help flag:
+
+### Display general help
+```sh
+git-secrets-scanner --help
+```
+
+### Display help for a specific command
+```sh
+git-secrets-scanner scan --help
+```
+
+### Example Output
+```
+$ git-secrets-scanner --help
+
+A CLI tool to scan staged Git files for secrets.
+
+Usage:
+  git-secrets-scanner [command]
+
+Available Commands:
+  scan           Scans staged Git files for secrets
+  install-hook   Installs Git pre-commit hook
+  uninstall-hook Removes the Git pre-commit hook
+  help           Show help for a command
+
+Flags:
+  -h, --help     Show help for the CLI tool
+  -v, --verbose  Enable verbose output
+
+Use "git-secrets-scanner [command] --help" for more details about a command.
+```
+
 ## 🤝 Contributing
 Contributions are welcome! Feel free to submit a pull request or open an issue.
 
