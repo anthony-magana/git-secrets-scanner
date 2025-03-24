@@ -72,7 +72,7 @@ patterns:
 
 ## 📖 Example Output
 
-```sh
+```
 $ git-secrets-scanner scan
 Scanning staged files for secrets...
 Scanning: config.json
@@ -80,6 +80,40 @@ Potential secrets found in config.json:
   - "AWS_SECRET_KEY": "AKIAEXAMPLE1234567890"
 
 Commit blocked! Remove sensitive data before committing.
+```
+
+## 🔍 Entropy-Based Scanning
+Git Secrets Scanner now includes entropy-based scanning to detect highly random strings, which are often API keys, passwords, or tokens.
+
+### How It Works
+
+- Uses Shannon entropy to measure randomness.
+- Flags strings with high entropy (default threshold: 4.5).
+- Helps detect secrets without predefined regex patterns.
+```
+$ git-secrets-scanner scan
+Scanning staged files for secrets...
+Scanning: .env
+Potential secrets found in .env:
+  - [Regex] AWS_SECRET_KEY="AKIAEXAMPLE1234567890"
+  - [Entropy] hjK8@#Dfh99s2!
+```
+
+## 🛑 Excluding Files from Scanning
+To ignore certain files or patterns, use the --exclude flag:
+
+### Usage
+```sh
+git-secrets-scanner scan --exclude config.json --exclude "*.log"
+```
+
+### Example Output
+```
+$ git-secrets-scanner scan --exclude secrets.txt --exclude "*.log"
+Skipping excluded file: secrets.txt
+Skipping excluded file: debug.log
+Scanning: app.js
+No secrets detected in app.js
 ```
 
 ## 🤝 Contributing
