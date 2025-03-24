@@ -2,24 +2,14 @@ package scanner
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"regexp"
 	"strings"
-
-	"git-secrets-scanner/internal/config"
 )
 
-// ScanFile scans a file for secrets using regex and entropy checks
-func ScanFile(filePath string) []string {
+// ScanFileWithEntropy scans a file for secrets using regex and entropy checks
+func ScanFileWithEntropy(filePath string, entropyThreshold float64, patterns []string) []string {
 	var foundSecrets []string
-
-	// Load regex patterns from config.yaml (fallback to defaults)
-	cfg, err := config.LoadConfig("config.yaml")
-	if err != nil {
-		fmt.Println("⚠️ Warning: Using default regex patterns (config.yaml not found or invalid)")
-		cfg = config.DefaultConfig()
-	}
 
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -33,7 +23,7 @@ func ScanFile(filePath string) []string {
 		line := scanner.Text()
 
 		// Regex-based scanning
-		for _, pattern := range cfg.Patterns {
+		for _, pattern := range patterns {
 			re := regexp.MustCompile(pattern)
 			if re.MatchString(line) {
 				foundSecrets = append(foundSecrets, "[Regex] "+line)
@@ -42,7 +32,7 @@ func ScanFile(filePath string) []string {
 
 		// Entropy-based scanning
 		for _, word := range splitWords(line) {
-			if isHighEntropy(word, cfg.EntropyThreshold) {
+			if isHighEntropy(word, entropyThreshold) {
 				foundSecrets = append(foundSecrets, "[Entropy] "+word)
 			}
 		}
