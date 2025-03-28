@@ -1,5 +1,7 @@
 # Git Secrets Scanner
-### (**STILL IN DEVELOPMENT**)
+> [!IMPORTANT]
+> Still in development. There will be code changes without warning.
+
 **Git Secrets Scanner** is a CLI tool designed to detect and prevent accidental commits of sensitive information such as API keys, passwords, and tokens. It integrates with Git hooks to block risky commits before they reach your repository.
 
 ## 🚀 Features
