@@ -203,7 +203,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v4
         with:
-          go-version: 1.20
+          go-version: 1.24
       - run: go build -o git-secrets-scanner
       - run: git-secrets-scanner scan --verbose --config config.yaml
 ```
